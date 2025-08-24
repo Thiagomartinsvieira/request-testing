@@ -1,16 +1,23 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 type Task = {
-    id: string;
-    text: string
-}
+  id: string;
+  text: string;
+};
 
 type TaskStore = {
-    tasks: Task[]
-}
+  tasks: Task[];
+  addTask: (text: string) => void;
+};
 
-export const useTaskStore = create<TaskStore>(() => ({
-    tasks: [{
-        id: '1', text: 'Estudar PHP'
-    }]
-}))
+export const useTaskStore = create<TaskStore>((set) => ({
+  tasks: [],
+  addTask(text) {
+    const newTask: Task = {
+      id: Date.now().toString(),
+      text,
+    };
+
+    set((state) => ({ tasks: [...state.tasks, newTask] }));
+  },
+}));

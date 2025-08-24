@@ -1,17 +1,18 @@
-"use client";
+'use client';
 
 import { useTaskStore } from '@/store/useTaskStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Page = () => {
   const [task, setTask] = useState('');
 
-  const { tasks } = useTaskStore()
+  const { tasks, addTask } = useTaskStore();
 
   const handleAddTask = () => {
     if (!task.trim()) return;
-    console.log('Adicionar tarefa:', task)
-    setTask(''); 
+    console.log('Adicionar tarefa:', task);
+    addTask(task);
+    setTask('');
   };
 
   return (
@@ -24,6 +25,11 @@ const Page = () => {
         <input
           type="text"
           value={task}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleAddTask();
+            }
+          }}
           onChange={(e) => setTask(e.target.value)}
           placeholder="Digite sua tarefa"
           className="border border-gray-300 rounded px-4 py-2 w-full max-w-md"
@@ -36,6 +42,13 @@ const Page = () => {
         </button>
       </div>
 
+      <ul className="max-w-md mx-auto space-y-2">
+        {tasks.map((task, index) => [
+          <li key={index} className="bg-white p-3 rounded shadow border border-gray-200">
+            {task.text} - {task.id}
+          </li>,
+        ])}
+      </ul>
     </main>
   );
 };
